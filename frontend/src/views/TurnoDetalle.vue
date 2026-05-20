@@ -3,10 +3,10 @@
     <router-link to="/turnos" style="font-size:14px; color:#1a73e8">← Volver a turnos</router-link>
     <div v-if="turno" class="card" style="margin-top: 20px; max-width: 560px">
       <h2>Turno #{{ turno.id }}</h2>
-      <div class="detail-row"><span class="label">Paciente</span><span>{{ turno.paciente?.nombreCompleto }}</span></div>
-      <div class="detail-row"><span class="label">DNI</span><span>{{ turno.paciente?.dni }}</span></div>
-      <div class="detail-row"><span class="label">Médico</span><span>{{ turno.medico?.nombreCompleto }}</span></div>
-      <div class="detail-row"><span class="label">Especialidad</span><span>{{ turno.medico?.especialidad }}</span></div>
+      <div class="detail-row"><span class="label">Paciente</span><span>{{ turno.pacienteNombre }}</span></div>
+      <div class="detail-row"><span class="label">DNI</span><span>{{ turno.pacienteDNI }}</span></div>
+      <div class="detail-row"><span class="label">Médico</span><span>{{ turno.medicoNombre }}</span></div>
+      <div class="detail-row"><span class="label">Especialidad</span><span>{{ turno.especialidad }}</span></div>
       <div class="detail-row"><span class="label">Fecha y hora</span><span>{{ formatFecha(turno.fechaHora) }}</span></div>
       <div class="detail-row"><span class="label">Estado</span><span>{{ turno.estado }}</span></div>
       <div class="detail-row"><span class="label">Motivo</span><span>{{ turno.motivo }}</span></div>

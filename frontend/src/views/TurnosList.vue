@@ -17,9 +17,9 @@
       <tbody>
         <tr v-for="turno in turnos" :key="turno.id">
           <td>{{ turno.id }}</td>
-          <td>{{ turno.paciente?.nombreCompleto }}</td>
-          <td>{{ turno.medico?.nombreCompleto }}</td>
-          <td>{{ turno.medico?.especialidad }}</td>
+          <td>{{ turno.pacienteNombre }}</td>
+          <td>{{ turno.medicoNombre }}</td>
+          <td>{{ turno.especialidad }}</td>
           <td>{{ formatFecha(turno.fechaHora) }}</td>
           <td>
             <span :class="['badge', `badge-${turno.estado?.toLowerCase()}`]">{{ turno.estado }}</span>
