@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TurnosMedicos.API.Middleware;
 using TurnosMedicos.Application.Interfaces.Repositories;
 using TurnosMedicos.Application.Interfaces.Services;
 using TurnosMedicos.Application.Services;
@@ -55,5 +56,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors();
+app.UseMiddleware<ExceptionMiddleware>();
 app.MapControllers();
 app.Run();

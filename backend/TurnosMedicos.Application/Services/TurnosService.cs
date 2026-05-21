@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using TurnosMedicos.Application.DTOs.Turnos;
+using TurnosMedicos.Application.Exceptions;
 using TurnosMedicos.Application.Helpers;
 using TurnosMedicos.Application.Interfaces.Repositories;
 using TurnosMedicos.Application.Interfaces.Services;
@@ -35,7 +36,7 @@ public class TurnosService : ITurnosService
     public async Task<TurnoDto> GetByIdAsync(int id)
     {
         var turno = await _turnosRepo.GetByIdAsync(id)
-            ?? throw new Exception("Turno no encontrado.");
+            ?? throw new NotFoundException("Turno no encontrado.");
 
         return TurnoMapper.ToDto(turno);
     }
@@ -43,13 +44,13 @@ public class TurnosService : ITurnosService
     public async Task<TurnoDto> CrearAsync(CreateTurnoRequest request)
     {
         var paciente = await _pacientesRepo.GetByIdAsync(request.PacienteId)
-            ?? throw new Exception("Paciente no encontrado.");
+            ?? throw new NotFoundException("Paciente no encontrado.");
 
         ValidarBloqueoPaciente(paciente);
 
         // Validación de conflicto de horario
         if (await _turnosRepo.ExisteConflictoAsync(request.MedicoId, request.FechaHora))
-            throw new Exception("Conflicto de horario.");
+            throw new BusinessException("Conflicto de horario.");
 
         var turno = TurnoMapper.ToEntity(request);
 
@@ -64,7 +65,7 @@ public class TurnosService : ITurnosService
     public async Task<TurnoDto> CancelarAsync(int id)
     {
         var turno = await _turnosRepo.GetByIdAsync(id)
-            ?? throw new Exception("Turno no encontrado.");
+            ?? throw new NotFoundException("Turno no encontrado.");
 
         if (turno.FechaHora - DateTime.UtcNow < TimeSpan.FromHours(_rules.CancellationWindowHours) &&
             turno.Paciente != null)
@@ -82,10 +83,10 @@ public class TurnosService : ITurnosService
     public async Task<TurnoDto> MarcarAusenciaAsync(int id)
     {
         var turno = await _turnosRepo.GetByIdAsync(id)
-            ?? throw new Exception("Turno no encontrado.");
+            ?? throw new NotFoundException("Turno no encontrado.");
 
         if (!turno.FechaHora.IsWithinCancellationWindow())
-            throw new Exception("Fuera de ventana válida.");
+            throw new BusinessException("Fuera de ventana válida.");
 
         turno.Estado = EstadoTurno.NoShow;
 
@@ -102,7 +103,7 @@ public class TurnosService : ITurnosService
     public async Task<TurnoDto> ActualizarEstadoAsync(int id, ActualizarEstadoRequest request)
     {
         var turno = await _turnosRepo.GetByIdAsync(id)
-            ?? throw new Exception("Turno no encontrado.");
+            ?? throw new NotFoundException("Turno no encontrado.");
 
         if (turno.Estado != EstadoTurno.NoShow &&
             request.Estado == EstadoTurno.NoShow &&
@@ -144,8 +145,7 @@ public class TurnosService : ITurnosService
         // Sigue bloqueado
         if (paciente.Bloqueado)
         {
-            throw new Exception(
-                $"Paciente bloqueado hasta {paciente.FechaBloqueo:dd/MM/yyyy}.");
+            throw new ValidationException($"Paciente bloqueado hasta {paciente.FechaBloqueo:dd/MM/yyyy}.");
         }
     }
 }
