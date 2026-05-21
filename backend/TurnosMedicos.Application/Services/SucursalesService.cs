@@ -1,6 +1,7 @@
 ﻿using TurnosMedicos.Application.DTOs.Sucursales;
 using TurnosMedicos.Application.Interfaces.Repositories;
 using TurnosMedicos.Application.Interfaces.Services;
+using TurnosMedicos.Application.Mappers;
 
 namespace TurnosMedicos.Application.Services;
 
@@ -17,12 +18,9 @@ public class SucursalesService : ISucursalesService
     {
         var sucursales = await _repo.GetAllAsync();
 
-        return sucursales.Select(s => new SucursalDto
-        {
-            Id = s.Id,
-            Nombre = s.Nombre,
-            Direccion = s.Direccion
-        }).ToList();
+        return sucursales
+            .Select(SucursalMapper.ToDto)
+            .ToList();
     }
 }
 

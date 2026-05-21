@@ -1,6 +1,7 @@
 ﻿using TurnosMedicos.Application.DTOs.Medicos;
 using TurnosMedicos.Application.Interfaces.Repositories;
 using TurnosMedicos.Application.Interfaces.Services;
+using TurnosMedicos.Application.Mappers;
 
 namespace TurnosMedicos.Application.Services;
 
@@ -17,13 +18,8 @@ public class MedicosService : IMedicosService
     {
         var medicos = await _repo.GetAllAsync();
 
-        return medicos.Select(m => new MedicoDto
-        {
-            Id = m.Id,
-            NombreCompleto = m.NombreCompleto,
-            Especialidad = m.Especialidad,
-            SucursalId = m.SucursalId,
-            SucursalNombre = m.Sucursal?.Nombre
-        }).ToList();
+        return medicos
+            .Select(MedicoMapper.ToDto)
+            .ToList();
     }
 }
