@@ -1,7 +1,7 @@
 ﻿using TurnosMedicos.Application.DTOs;
 using TurnosMedicos.Application.Interfaces.Repositories;
 using TurnosMedicos.Application.Interfaces.Services;
-using TurnosMedicos.Domain.Models;
+using TurnosMedicos.Application.Mappers;
 
 namespace TurnosMedicos.Application.Services;
 
@@ -18,76 +18,40 @@ public class PacientesService : IPacientesService
     {
         var pacientes = await _repo.GetAllAsync();
 
-        return pacientes.Select(p => new PacienteDto
-        {
-            Id = p.Id,
-            NombreCompleto = p.NombreCompleto,
-            DNI = p.DNI,
-            Email = p.Email,
-            Telefono = p.Telefono
-        }).ToList();
+        return pacientes
+            .Select(PacienteMapper.ToDto)
+            .ToList();
     }
 
     public async Task<PacienteDto?> GetByIdAsync(int id)
     {
-        var p = await _repo.GetByIdAsync(id);
-        if (p == null) return null;
+        var paciente = await _repo.GetByIdAsync(id);
 
-        return new PacienteDto
-        {
-            Id = p.Id,
-            NombreCompleto = p.NombreCompleto,
-            DNI = p.DNI,
-            Email = p.Email,
-            Telefono = p.Telefono
-        };
+        return paciente != null ? (PacienteDto?)PacienteMapper.ToDto(paciente) : null;
     }
 
     public async Task<PacienteDto> CreateAsync(CreatePacienteRequest request)
     {
-        var paciente = new Paciente
-        {
-            NombreCompleto = request.NombreCompleto,
-            DNI = request.DNI,
-            Email = request.Email,
-            Telefono = request.Telefono,
-            CreatedAt = DateTime.UtcNow,
-            IsActive = true
-        };
+        var paciente = PacienteMapper.ToEntity(request);
 
         await _repo.AddAsync(paciente);
         await _repo.SaveChangesAsync();
 
-        return new PacienteDto
-        {
-            Id = paciente.Id,
-            NombreCompleto = paciente.NombreCompleto,
-            DNI = paciente.DNI,
-            Email = paciente.Email,
-            Telefono = paciente.Telefono
-        };
+        return PacienteMapper.ToDto(paciente);
     }
 
     public async Task<PacienteDto?> UpdateAsync(int id, UpdatePacienteRequest request)
     {
         var paciente = await _repo.GetByIdAsync(id);
-        if (paciente == null) return null;
 
-        paciente.NombreCompleto = request.NombreCompleto;
-        paciente.DNI = request.DNI;
-        paciente.Email = request.Email;
-        paciente.Telefono = request.Telefono;
+        if (paciente == null)
+            return null;
+
+        PacienteMapper.UpdateEntity(paciente, request);
 
         await _repo.SaveChangesAsync();
 
-        return new PacienteDto
-        {
-            Id = paciente.Id,
-            NombreCompleto = paciente.NombreCompleto,
-            DNI = paciente.DNI,
-            Email = paciente.Email,
-            Telefono = paciente.Telefono
-        };
+        return PacienteMapper.ToDto(paciente);
     }
 
     public async Task<bool> DeleteAsync(int id)

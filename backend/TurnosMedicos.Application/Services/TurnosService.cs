@@ -51,15 +51,7 @@ public class TurnosService : ITurnosService
         if (await _turnosRepo.ExisteConflictoAsync(request.MedicoId, request.FechaHora))
             throw new Exception("Conflicto de horario.");
 
-        var turno = new Turno
-        {
-            PacienteId = request.PacienteId,
-            MedicoId = request.MedicoId,
-            FechaHora = request.FechaHora,
-            FechaCreacion = DateTime.UtcNow,
-            Estado = EstadoTurno.Pendiente,
-            Motivo = request.Motivo
-        };
+        var turno = TurnoMapper.ToEntity(request);
 
         await _turnosRepo.AddAsync(turno);
         await _turnosRepo.SaveChangesAsync();

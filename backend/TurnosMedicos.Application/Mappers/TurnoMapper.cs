@@ -1,4 +1,5 @@
 ﻿using TurnosMedicos.Application.DTOs;
+using TurnosMedicos.Domain.Enums;
 using TurnosMedicos.Domain.Models;
 
 namespace TurnosMedicos.Application.Mappers;
@@ -20,6 +21,19 @@ public static class TurnoMapper
             Estado = t.Estado.ToString(),
             FechaCreacion = t.FechaCreacion,
             Motivo = t.Motivo
+        };
+    }
+
+    public static Turno ToEntity(CreateTurnoRequest request)
+    {
+        return new Turno
+        {
+            PacienteId = request.PacienteId,
+            MedicoId = request.MedicoId,
+            FechaHora = request.FechaHora,
+            FechaCreacion = DateTime.UtcNow,
+            Estado = EstadoTurno.Pendiente,
+            Motivo = request.Motivo
         };
     }
 }
