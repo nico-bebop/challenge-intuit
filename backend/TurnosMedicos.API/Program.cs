@@ -1,17 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TurnosMedicos.API.Extensions;
 using TurnosMedicos.API.Middleware;
-using TurnosMedicos.Application.Interfaces.Repositories;
-using TurnosMedicos.Application.Interfaces.Services;
-using TurnosMedicos.Application.Services;
 using TurnosMedicos.Application.Settings;
 using TurnosMedicos.Infrastructure.Data;
-using TurnosMedicos.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=turnos.db"));
+    options.UseSqlite(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -19,18 +17,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
         new System.Text.Json.Serialization.JsonStringEnumConverter());
 });
 
-builder.Services.AddScoped<ITurnosService, TurnosService>();
-builder.Services.AddScoped<ITurnosRepository, TurnosRepository>();
-
-builder.Services.AddScoped<IMedicosService, MedicosService>();
-builder.Services.AddScoped<IMedicosRepository, MedicosRepository>();
-
-builder.Services.AddScoped<IPacientesService, PacientesService>();
-builder.Services.AddScoped<IPacientesRepository, PacientesRepository>();
-
-builder.Services.AddScoped<ISucursalesService, SucursalesService>();
-builder.Services.AddScoped<ISucursalesRepository, SucursalesRepository>();
-
+builder.Services.AddApplicationServices();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
