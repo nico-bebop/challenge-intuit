@@ -25,9 +25,9 @@
             <span :class="['badge', `badge-${turno.estado?.toLowerCase()}`]">{{ turno.estado }}</span>
           </td>
           <td>{{ turno.motivo }}</td>
-          <td>
-            <router-link :to="`/turnos/${turno.id}`">Ver</router-link>
-            <button class="btn-danger" style="margin-left: 8px" @click="cancelar(turno.id)">Cancelar</button>
+          <td style="display:flex; gap:8px">
+            <router-link :to="`/turnos/${turno.id}`" class="btn-primary">Ver</router-link>
+            <button class="btn-danger" @click="cancelar(turno.id)">Cancelar</button>
           </td>
         </tr>
       </tbody>
