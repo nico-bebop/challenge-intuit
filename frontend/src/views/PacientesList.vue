@@ -50,8 +50,11 @@ export default {
     try {
       const res = await pacientesApi.getAll()
       this.pacientes = res.data
-    } catch {
-      alert('Error al procesar la solicitud')
+    } catch (error) {
+      alert(
+        error.response?.data?.message ||
+        'Error al procesar la solicitud'
+      )
     }
   },
   methods: {
@@ -59,9 +62,12 @@ export default {
       try {
         await pacientesApi.delete(id)
         this.pacientes = this.pacientes.filter(p => p.id !== id)
-      } catch {
-        alert('Error al procesar la solicitud')
-      }
+      } catch (error) {
+      alert(
+        error.response?.data?.message ||
+        'Error al procesar la solicitud'
+      )
+    }
     }
   }
 }

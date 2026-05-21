@@ -47,8 +47,11 @@ export default {
       const res = await turnosApi.getById(this.$route.params.id)
       this.turno = res.data
       this.nuevoEstado = this.turno.estado
-    } catch {
-      alert('Error al procesar la solicitud')
+    } catch (error) {
+      alert(
+        error.response?.data?.message ||
+        'Error al procesar la solicitud'
+      )
     }
   },
   methods: {
@@ -59,9 +62,12 @@ export default {
       try {
         const res = await turnosApi.actualizarEstado(this.turno.id, { estado: this.nuevoEstado })
         this.turno = res.data
-      } catch {
-        alert('Error al procesar la solicitud')
-      }
+      } catch (error) {
+      alert(
+        error.response?.data?.message ||
+        'Error al procesar la solicitud'
+      )
+    }
     },
     async cancelar() {
       await turnosApi.cancelar(this.turno.id)
