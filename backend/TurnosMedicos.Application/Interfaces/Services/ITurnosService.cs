@@ -1,4 +1,4 @@
-﻿using TurnosMedicos.Application.DTOs;
+﻿using TurnosMedicos.Application.DTOs.Turnos;
 
 namespace TurnosMedicos.Application.Interfaces.Services;
 

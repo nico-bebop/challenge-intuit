@@ -1,4 +1,4 @@
-﻿using TurnosMedicos.Application.DTOs;
+﻿using TurnosMedicos.Application.DTOs.Medicos;
 using TurnosMedicos.Application.Interfaces.Repositories;
 using TurnosMedicos.Application.Interfaces.Services;
 

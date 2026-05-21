@@ -1,4 +1,4 @@
-﻿namespace TurnosMedicos.Application.DTOs;
+﻿namespace TurnosMedicos.Application.DTOs.Turnos;
 
 public class CreateTurnoRequest
 {

@@ -1,4 +1,4 @@
-﻿using TurnosMedicos.Application.DTOs;
+﻿using TurnosMedicos.Application.DTOs.Pacientes;
 using TurnosMedicos.Domain.Models;
 
 namespace TurnosMedicos.Application.Mappers;

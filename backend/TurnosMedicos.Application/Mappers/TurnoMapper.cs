@@ -1,4 +1,4 @@
-﻿using TurnosMedicos.Application.DTOs;
+﻿using TurnosMedicos.Application.DTOs.Turnos;
 using TurnosMedicos.Domain.Enums;
 using TurnosMedicos.Domain.Models;
 
