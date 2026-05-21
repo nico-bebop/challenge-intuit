@@ -11,6 +11,7 @@
           <th>Teléfono</th>
           <th>No-shows</th>
           <th>Bloqueado</th>
+          <th>Activo</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -27,7 +28,12 @@
             <span v-else style="color: #388e3c">No</span>
           </td>
           <td>
-            <button class="btn-danger" @click="eliminar(p.id)">Eliminar</button>
+            <span v-if="p.isActive" style="color: #d32f2f; font-weight: 600">Sí</span>
+            <span v-else style="color: #388e3c">No</span>
+          </td>          
+          <td> 
+           <button v-if="p.isActive" class="btn-danger" @click="eliminar(p.id)">Eliminar</button>
+           <button v-else class="btn-primary" @click="activar(p.id)">Activar</button>
           </td>
         </tr>
       </tbody>
@@ -48,26 +54,36 @@ export default {
   },
   async mounted() {
     try {
-      const res = await pacientesApi.getAll()
-      this.pacientes = res.data
+      await this.cargarPacientes()
     } catch (error) {
-      alert(
-        error.response?.data?.message ||
-        'Error al procesar la solicitud'
-      )
+      alert(error.response?.data?.message || 
+      'Error al procesar la solicitud')
     }
   },
   methods: {
+    async cargarPacientes() {
+      const res = await pacientesApi.getAllIncludingInactive()
+      this.pacientes = res.data
+    },
     async eliminar(id) {
       try {
         await pacientesApi.delete(id)
-        this.pacientes = this.pacientes.filter(p => p.id !== id)
+        await this.cargarPacientes()
       } catch (error) {
       alert(
         error.response?.data?.message ||
         'Error al procesar la solicitud'
       )
     }
+    },
+    async activar(id) {
+      try {
+        await pacientesApi.activate(id)
+        await this.cargarPacientes()
+      } catch (error) {
+        alert(error.response?.data?.message ||
+        'Error al procesar la solicitud')
+      }
     }
   }
 }

@@ -22,6 +22,13 @@ public class PacientesController : ControllerBase
         return Ok(pacientes);
     }
 
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAllIncludingInactive()
+    {
+        var pacientes = await _service.GetAllIncludingInactiveAsync();
+        return Ok(pacientes);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
@@ -55,6 +62,15 @@ public class PacientesController : ControllerBase
     {
         var deleted = await _service.DeleteAsync(id);
         if (!deleted) return NotFound();
+
+        return NoContent();
+    }
+
+    [HttpPut("{id}/activar")]
+    public async Task<IActionResult> Activate(int id)
+    {
+        var activated = await _service.ActivateAsync(id);
+        if (!activated) return NotFound();
 
         return NoContent();
     }

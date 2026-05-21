@@ -23,6 +23,15 @@ public class PacientesService : IPacientesService
             .ToList();
     }
 
+    public async Task<List<PacienteDto>> GetAllIncludingInactiveAsync()
+    {
+        var pacientes = await _repo.GetAllIncludingInactiveAsync();
+
+        return pacientes
+            .Select(PacienteMapper.ToDto)
+            .ToList();
+    }
+
     public async Task<PacienteDto?> GetByIdAsync(int id)
     {
         var paciente = await _repo.GetByIdAsync(id);
@@ -60,6 +69,16 @@ public class PacientesService : IPacientesService
         if (paciente == null) return false;
 
         await _repo.DeleteAsync(paciente);
+        await _repo.SaveChangesAsync();
+
+        return true;
+    }
+    public async Task<bool> ActivateAsync(int id)
+    {
+        var paciente = await _repo.GetByIdAsync(id);
+        if (paciente == null) return false;
+
+        await _repo.ActivateAsync(paciente);
         await _repo.SaveChangesAsync();
 
         return true;
