@@ -15,17 +15,28 @@ public class PacientesRepository : IPacientesRepository
     }
 
     public Task<List<Paciente>> GetAllAsync()
+        => _context.Pacientes
+            .Where(x => x.IsActive).ToListAsync();
+
+    public Task<List<Paciente>> GetAllIncludingInactiveAsync()
         => _context.Pacientes.ToListAsync();
 
     public Task<Paciente?> GetByIdAsync(int id)
-        => _context.Pacientes.FirstOrDefaultAsync(x => x.Id == id);
+        => _context.Pacientes
+            .FirstOrDefaultAsync(x => x.Id == id);
 
     public Task AddAsync(Paciente paciente)
         => _context.Pacientes.AddAsync(paciente).AsTask();
 
     public Task DeleteAsync(Paciente paciente)
     {
-        _context.Pacientes.Remove(paciente);
+        paciente.IsActive = false;
+        return Task.CompletedTask;
+    }
+
+    public Task ActivateAsync(Paciente paciente)
+    {
+        paciente.IsActive = true;
         return Task.CompletedTask;
     }
 
