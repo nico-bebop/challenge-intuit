@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TurnosMedicos.API.Middleware;
 using TurnosMedicos.Application.Interfaces.Repositories;
@@ -35,6 +36,23 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<BusinessRulesSettings>(
     builder.Configuration.GetSection("BusinessRules"));
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(x => x.Value?.Errors.Count > 0)
+            .SelectMany(x => x.Value!.Errors)
+            .Select(x => x.ErrorMessage)
+            .ToList();
+
+        return new BadRequestObjectResult(new
+        {
+            message = errors.FirstOrDefault()
+        });
+    };
+});
 
 builder.Services.AddCors(options =>
 {
