@@ -7,4 +7,7 @@ public class PacienteDto
     public string DNI { get; set; }
     public string Email { get; set; }
     public string Telefono { get; set; }
+    public int NoShowCount { get; set; }
+    public bool Bloqueado { get; set; }
+    public bool IsActive { get; set; }
 }

@@ -13,7 +13,10 @@ public static class PacienteMapper
             NombreCompleto = paciente.NombreCompleto,
             DNI = paciente.DNI,
             Email = paciente.Email,
-            Telefono = paciente.Telefono
+            Telefono = paciente.Telefono,
+            Bloqueado = paciente.Bloqueado,
+            IsActive = paciente.IsActive,
+            NoShowCount = paciente.NoShowCount
         };
     }
 
