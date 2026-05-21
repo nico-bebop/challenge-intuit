@@ -48,8 +48,7 @@ export default {
   },
   async mounted() {
     try {
-      const res = await turnosApi.getAll()
-      this.turnos = res.data
+      await this.cargarTurnos()
     } catch (error) {
       alert(
         error.response?.data?.message ||
@@ -58,11 +57,23 @@ export default {
     }
   },
   methods: {
+    async cargarTurnos() {
+      const res = await turnosApi.getAll()
+      this.turnos = res.data
+    },
     formatFecha(fecha) {
       return new Date(fecha).toLocaleString('es-AR')
     },
     async cancelar(id) {
-      await turnosApi.cancelar(id)
+      try{
+        await turnosApi.cancelar(id)
+        await this.cargarTurnos()
+      } catch (error) {
+        alert(
+          error.response?.data?.message ||
+          'Error al procesar la solicitud'
+        )
+      }
     }
   }
 }

@@ -33,7 +33,7 @@ public class TurnosService : ITurnosService
             .ToList();
     }
 
-    public async Task<TurnoDto> GetByIdAsync(int id)
+    public async Task<TurnoDto?> GetByIdAsync(int id)
     {
         var turno = await _turnosRepo.GetByIdAsync(id)
             ?? throw new NotFoundException("Turno no encontrado.");
@@ -73,7 +73,10 @@ public class TurnosService : ITurnosService
             RegistrarAusencia(turno.Paciente);
         }
 
-        turno.Estado = EstadoTurno.Cancelado;
+        if (turno.Estado == EstadoTurno.Pendiente)
+            turno.Estado = EstadoTurno.Cancelado;
+        else
+            throw new BusinessException("Solo puede cancelarse un turno Pendiente");
 
         await _turnosRepo.SaveChangesAsync();
 
