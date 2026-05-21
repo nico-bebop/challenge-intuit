@@ -1,5 +1,6 @@
 ﻿using TurnosMedicos.Application.DTOs;
-using TurnosMedicos.Application.Interfaces;
+using TurnosMedicos.Application.Interfaces.Repositories;
+using TurnosMedicos.Application.Interfaces.Services;
 
 namespace TurnosMedicos.Application.Services;
 

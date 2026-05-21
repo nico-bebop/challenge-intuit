@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TurnosMedicos.Application.DTOs;
-using TurnosMedicos.Application.Interfaces;
+using TurnosMedicos.Application.Interfaces.Services;
 
 namespace TurnosMedicos.API.Controllers;
 

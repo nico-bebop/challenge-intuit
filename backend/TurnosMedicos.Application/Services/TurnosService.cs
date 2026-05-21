@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using TurnosMedicos.Application.DTOs;
 using TurnosMedicos.Application.Helpers;
-using TurnosMedicos.Application.Interfaces;
+using TurnosMedicos.Application.Interfaces.Repositories;
+using TurnosMedicos.Application.Interfaces.Services;
 using TurnosMedicos.Application.Mappers;
 using TurnosMedicos.Application.Settings;
 using TurnosMedicos.Domain.Enums;

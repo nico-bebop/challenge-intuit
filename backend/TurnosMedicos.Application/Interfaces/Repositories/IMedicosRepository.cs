@@ -1,6 +1,6 @@
 ﻿using TurnosMedicos.Domain.Models;
 
-namespace TurnosMedicos.Application.Interfaces;
+namespace TurnosMedicos.Application.Interfaces.Repositories;
 
 public interface IMedicosRepository
 {

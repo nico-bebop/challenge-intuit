@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TurnosMedicos.Application.Interfaces;
+using TurnosMedicos.Application.Interfaces.Repositories;
 using TurnosMedicos.Domain.Models;
 using TurnosMedicos.Infrastructure.Data;
 
