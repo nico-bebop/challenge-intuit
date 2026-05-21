@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TurnosMedicos.Application.Interfaces;
 using TurnosMedicos.Application.Services;
+using TurnosMedicos.Application.Settings;
 using TurnosMedicos.Infrastructure.Data;
 using TurnosMedicos.Infrastructure.Repositories;
 
@@ -30,9 +31,8 @@ builder.Services.AddScoped<ISucursalesRepository, SucursalesRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.Configure<BusinessRulesSettings>(
+    builder.Configuration.GetSection("BusinessRules"));
 
 builder.Services.AddCors(options =>
 {
