@@ -34,7 +34,9 @@
 </template>
 
 <script>
-import { turnosApi, pacientesApi, medicosApi } from '../services/api'
+import { turnosApi } from '../services/turnosApi'
+import { pacientesApi } from '../services/pacientesApi'
+import { medicosApi } from '../services/medicosApi'
 
 export default {
   name: 'TurnoNuevo',

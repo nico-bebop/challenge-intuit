@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { pacientesApi } from '../services/api'
+import { pacientesApi } from '../services/pacientesApi'
 
 export default {
   name: 'PacientesList',

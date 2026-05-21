@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { turnosApi } from '../services/api'
+import { turnosApi } from '../services/turnosApi'
 
 export default {
   name: 'TurnoDetalle',
