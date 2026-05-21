@@ -46,10 +46,7 @@ export default {
     try {
       await this.cargarTurno(this.$route.params.id)
     } catch (error) {
-      alert(
-        error.response?.data?.message ||
-        'Error al procesar la solicitud'
-      )
+      this.$error(error)
     }
   },
   methods: {
@@ -66,10 +63,7 @@ export default {
         const res = await turnosApi.actualizarEstado(this.turno.id, { estado: this.nuevoEstado })
         await this.cargarTurno(this.$route.params.id)
       } catch (error) {
-        alert(
-          error.response?.data?.message ||
-          'Error al procesar la solicitud'
-        )
+        this.$error(error)
       }
     },
     async cancelar() {
@@ -77,10 +71,7 @@ export default {
         await turnosApi.cancelar(this.turno.id)
         await this.cargarTurno(this.$route.params.id)
       } catch (error) {
-        alert(
-          error.response?.data?.message ||
-          'Error al procesar la solicitud'
-        )
+        this.$error(error)
       }
     },
     async marcarAusencia() {
@@ -88,10 +79,7 @@ export default {
         await turnosApi.marcarAusencia(this.turno.id)
         await this.cargarTurno(this.$route.params.id)
       } catch (error) {
-        alert(
-          error.response?.data?.message ||
-          'Error al procesar la solicitud'
-        )
+        this.$error(error)
       }
     }
   }

@@ -56,8 +56,7 @@ export default {
     try {
       await this.cargarPacientes()
     } catch (error) {
-      alert(error.response?.data?.message || 
-      'Error al procesar la solicitud')
+      this.$error(error)
     }
   },
   methods: {
@@ -70,10 +69,7 @@ export default {
         await pacientesApi.delete(id)
         await this.cargarPacientes()
       } catch (error) {
-      alert(
-        error.response?.data?.message ||
-        'Error al procesar la solicitud'
-      )
+      this.$error(error)
     }
     },
     async activar(id) {
@@ -81,8 +77,7 @@ export default {
         await pacientesApi.activate(id)
         await this.cargarPacientes()
       } catch (error) {
-        alert(error.response?.data?.message ||
-        'Error al procesar la solicitud')
+        this.$error(error)
       }
     }
   }

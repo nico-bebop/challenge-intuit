@@ -50,10 +50,7 @@ export default {
     try {
       await this.cargarTurnos()
     } catch (error) {
-      alert(
-        error.response?.data?.message ||
-        'Error al procesar la solicitud'
-      )
+      this.$error(error)
     }
   },
   methods: {
@@ -69,10 +66,7 @@ export default {
         await turnosApi.cancelar(id)
         await this.cargarTurnos()
       } catch (error) {
-        alert(
-          error.response?.data?.message ||
-          'Error al procesar la solicitud'
-        )
+        this.$error(error)
       }
     }
   }
