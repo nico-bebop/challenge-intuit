@@ -8,16 +8,18 @@ namespace TurnosMedicos.Application.Services;
 
 public class TurnosService : ITurnosService
 {
-    private readonly ITurnosRepository _repo;
+    private readonly ITurnosRepository _turnosRepo;
+    private readonly IPacientesRepository _pacientesRepo;
 
-    public TurnosService(ITurnosRepository repo)
+    public TurnosService(ITurnosRepository turnosRepo, IPacientesRepository pacientesRepo)
     {
-        _repo = repo;
+        _turnosRepo = turnosRepo;
+        _pacientesRepo = pacientesRepo;
     }
 
     public async Task<List<TurnoDto>> GetAllAsync()
     {
-        var turnos = await _repo.GetAllAsync();
+        var turnos = await _turnosRepo.GetAllAsync();
 
         return turnos
             .Select(TurnoMapper.ToDto)
@@ -26,7 +28,7 @@ public class TurnosService : ITurnosService
 
     public async Task<TurnoDto> GetByIdAsync(int id)
     {
-        var turno = await _repo.GetByIdAsync(id)
+        var turno = await _turnosRepo.GetByIdAsync(id)
             ?? throw new Exception("Turno no encontrado.");
 
         return TurnoMapper.ToDto(turno);
@@ -34,7 +36,26 @@ public class TurnosService : ITurnosService
 
     public async Task<TurnoDto> CrearAsync(CreateTurnoRequest request)
     {
-        if (await _repo.ExisteConflictoAsync(request.MedicoId, request.FechaHora))
+        var paciente = await _pacientesRepo.GetByIdAsync(request.PacienteId) ?? throw new Exception("Paciente no encontrado.");
+
+        // Desbloqueo automático después de 30 días
+        if (paciente.Bloqueado &&
+            paciente.FechaBloqueo.HasValue &&
+            paciente.FechaBloqueo <= DateTime.UtcNow)
+        {
+            paciente.Bloqueado = false;
+            paciente.NoShowCount = 0;
+            paciente.FechaBloqueo = null;
+
+            await _pacientesRepo.SaveChangesAsync();
+        }
+
+        // Validación de bloqueo
+        if (paciente.Bloqueado)
+            throw new Exception($"Paciente bloqueado hasta {paciente.FechaBloqueo:dd/MM/yyyy}.");
+
+        // Validación de conflicto de horario
+        if (await _turnosRepo.ExisteConflictoAsync(request.MedicoId, request.FechaHora))
             throw new Exception("Conflicto de horario.");
 
         var turno = new Turno
@@ -47,30 +68,36 @@ public class TurnosService : ITurnosService
             Motivo = request.Motivo
         };
 
-        await _repo.AddAsync(turno);
-        await _repo.SaveChangesAsync();
+        await _turnosRepo.AddAsync(turno);
+        await _turnosRepo.SaveChangesAsync();
+
+        // Para que el mapper tenga acceso al nombre
+        turno.Paciente = paciente;
 
         return TurnoMapper.ToDto(turno);
     }
 
     public async Task<TurnoDto> CancelarAsync(int id)
     {
-        var turno = await _repo.GetByIdAsync(id)
+        var turno = await _turnosRepo.GetByIdAsync(id)
             ?? throw new Exception("Turno no encontrado.");
 
-        if (turno.FechaHora - DateTime.UtcNow < TimeSpan.FromHours(24))
-            throw new Exception("No se puede cancelar dentro de 24h.");
+        if (turno.FechaHora - DateTime.UtcNow < TimeSpan.FromHours(24) &&
+            turno.Paciente != null)
+        {
+            RegistrarAusencia(turno.Paciente);
+        }
 
         turno.Estado = EstadoTurno.Cancelado;
 
-        await _repo.SaveChangesAsync();
+        await _turnosRepo.SaveChangesAsync();
 
         return TurnoMapper.ToDto(turno);
     }
 
     public async Task<TurnoDto> MarcarAusenciaAsync(int id)
     {
-        var turno = await _repo.GetByIdAsync(id)
+        var turno = await _turnosRepo.GetByIdAsync(id)
             ?? throw new Exception("Turno no encontrado.");
 
         if (!turno.FechaHora.IsWithinCancellationWindow())
@@ -78,20 +105,43 @@ public class TurnosService : ITurnosService
 
         turno.Estado = EstadoTurno.NoShow;
 
-        await _repo.SaveChangesAsync();
+        if (turno.Paciente != null)
+        {
+            RegistrarAusencia(turno.Paciente);
+        }
+
+        await _turnosRepo.SaveChangesAsync();
 
         return TurnoMapper.ToDto(turno);
     }
 
     public async Task<TurnoDto> ActualizarEstadoAsync(int id, ActualizarEstadoRequest request)
     {
-        var turno = await _repo.GetByIdAsync(id)
+        var turno = await _turnosRepo.GetByIdAsync(id)
             ?? throw new Exception("Turno no encontrado.");
+
+        if (turno.Estado != EstadoTurno.NoShow &&
+            request.Estado == EstadoTurno.NoShow &&
+            turno.Paciente != null)
+        {
+            RegistrarAusencia(turno.Paciente);
+        }
 
         turno.Estado = request.Estado;
 
-        await _repo.SaveChangesAsync();
+        await _turnosRepo.SaveChangesAsync();
 
         return TurnoMapper.ToDto(turno);
+    }
+
+    private void RegistrarAusencia(Paciente paciente)
+    {
+        paciente.NoShowCount++;
+
+        if (paciente.NoShowCount >= 3)
+        {
+            paciente.Bloqueado = true;
+            paciente.FechaBloqueo = DateTime.UtcNow.AddDays(30);
+        }
     }
 }
