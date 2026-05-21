@@ -1,4 +1,4 @@
-namespace TurnosMedicos.Domain.Models;
+namespace TurnosMedicos.Domain.Enums;
 
 public enum EstadoTurno
 {

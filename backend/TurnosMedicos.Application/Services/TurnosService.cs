@@ -4,6 +4,7 @@ using TurnosMedicos.Application.Helpers;
 using TurnosMedicos.Application.Interfaces;
 using TurnosMedicos.Application.Mappers;
 using TurnosMedicos.Application.Settings;
+using TurnosMedicos.Domain.Enums;
 using TurnosMedicos.Domain.Models;
 
 namespace TurnosMedicos.Application.Services;

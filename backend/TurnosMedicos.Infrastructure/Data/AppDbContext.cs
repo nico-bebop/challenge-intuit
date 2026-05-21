@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TurnosMedicos.Domain.Enums;
 using TurnosMedicos.Domain.Models;
 
 namespace TurnosMedicos.Infrastructure.Data;

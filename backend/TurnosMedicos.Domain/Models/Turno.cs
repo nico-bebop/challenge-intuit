@@ -1,3 +1,5 @@
+using TurnosMedicos.Domain.Enums;
+
 namespace TurnosMedicos.Domain.Models;
 
 public class Turno
