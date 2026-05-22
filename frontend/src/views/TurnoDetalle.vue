@@ -7,6 +7,7 @@
       <div class="detail-row"><span class="label">DNI</span><span>{{ turno.pacienteDNI }}</span></div>
       <div class="detail-row"><span class="label">Médico</span><span>{{ turno.medicoNombre }}</span></div>
       <div class="detail-row"><span class="label">Especialidad</span><span>{{ turno.especialidad }}</span></div>
+      <div class="detail-row"><span class="label">Sucursal</span><span>{{ turno.sucursalNombre }}</span></div>
       <div class="detail-row"><span class="label">Fecha y hora</span><span>{{ formatFecha(turno.fechaHora) }}</span></div>
       <div class="detail-row"><span class="label">Estado</span><span>{{ turno.estado }}</span></div>
       <div class="detail-row"><span class="label">Motivo</span><span>{{ turno.motivo }}</span></div>

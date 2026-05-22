@@ -8,6 +8,7 @@
           <th>Paciente</th>
           <th>Médico</th>
           <th>Especialidad</th>
+          <th>Sucursal</th>
           <th>Fecha y hora</th>
           <th>Estado</th>
           <th>Motivo</th>
@@ -20,6 +21,7 @@
           <td>{{ turno.pacienteNombre }}</td>
           <td>{{ turno.medicoNombre }}</td>
           <td>{{ turno.especialidad }}</td>
+          <td>{{ turno.sucursalNombre }}</td>
           <td>{{ formatFecha(turno.fechaHora) }}</td>
           <td>
             <span :class="['badge', `badge-${turno.estado?.toLowerCase()}`]">{{ turno.estado }}</span>
