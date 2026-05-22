@@ -19,12 +19,14 @@ public class TurnosRepository : ITurnosRepository
         => _context.Turnos
             .Include(t => t.Paciente)
             .Include(t => t.Medico)
+                .ThenInclude(m => m.Sucursal)
             .ToListAsync();
 
     public Task<Turno?> GetByIdAsync(int id)
         => _context.Turnos
             .Include(t => t.Paciente)
             .Include(t => t.Medico)
+                .ThenInclude(m => m.Sucursal)
             .FirstOrDefaultAsync(t => t.Id == id);
 
     public Task AddAsync(Turno turno)

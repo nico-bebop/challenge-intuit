@@ -15,5 +15,7 @@ public class MedicosRepository : IMedicosRepository
     }
 
     public Task<List<Medico>> GetAllAsync()
-        => _context.Medicos.ToListAsync();
+        => _context.Medicos
+        .Include(m => m.Sucursal)
+        .ToListAsync();
 }

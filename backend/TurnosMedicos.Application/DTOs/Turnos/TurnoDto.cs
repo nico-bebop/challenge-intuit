@@ -9,6 +9,7 @@ public class TurnoDto
     public int MedicoId { get; set; }
     public string? MedicoNombre { get; set; }
     public string? Especialidad { get; set; } = string.Empty;
+    public string? SucursalNombre { get; set; } = string.Empty;
     public DateTime FechaHora { get; set; }
     public string Estado { get; set; } = string.Empty;
     public DateTime FechaCreacion { get; set; }

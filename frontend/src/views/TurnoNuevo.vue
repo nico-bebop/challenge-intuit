@@ -16,7 +16,7 @@
         <select v-model="form.medicoId" required >
           <option value="">Seleccioná un médico</option>
           <option v-for="m in medicos" :key="m.id" :value="m.id">
-            {{ m.nombreCompleto }} — {{ m.especialidad }}
+            {{ m.nombreCompleto }} — {{ m.especialidad }} — {{ m.sucursalNombre }}
           </option>
         </select>
       </div>

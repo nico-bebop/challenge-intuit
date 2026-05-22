@@ -17,6 +17,7 @@ public static class TurnoMapper
             MedicoId = t.MedicoId,
             MedicoNombre = t.Medico?.NombreCompleto,
             Especialidad = t.Medico?.Especialidad,
+            SucursalNombre = t.Medico?.Sucursal?.Nombre,
             FechaHora = t.FechaHora,
             Estado = t.Estado.ToString(),
             FechaCreacion = t.FechaCreacion,
