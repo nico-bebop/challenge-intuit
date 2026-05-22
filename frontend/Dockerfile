@@ -8,6 +8,10 @@ RUN npm install
 
 COPY . .
 
+COPY template.env .env
+
+RUN npm run build
+
 EXPOSE 5173
 
 CMD ["npm", "run", "dev", "--", "--host"]

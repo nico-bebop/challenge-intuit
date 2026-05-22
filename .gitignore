@@ -7,7 +7,6 @@
 *.suo
 *.userosscache
 *.sln.docstates
-/backend/TurnosMedicos.API/appsettings.json
 
 # User secrets
 **/secrets.json
