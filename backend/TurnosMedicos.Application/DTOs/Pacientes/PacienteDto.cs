@@ -1,0 +1,13 @@
+﻿namespace TurnosMedicos.Application.DTOs.Pacientes;
+
+public class PacienteDto
+{
+    public int Id { get; set; }
+    public string NombreCompleto { get; set; }
+    public string DNI { get; set; }
+    public string Email { get; set; }
+    public string Telefono { get; set; }
+    public int NoShowCount { get; set; }
+    public bool Bloqueado { get; set; }
+    public bool IsActive { get; set; }
+}

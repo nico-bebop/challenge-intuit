@@ -3,10 +3,10 @@
     <router-link to="/turnos" style="font-size:14px; color:#1a73e8">← Volver a turnos</router-link>
     <div v-if="turno" class="card" style="margin-top: 20px; max-width: 560px">
       <h2>Turno #{{ turno.id }}</h2>
-      <div class="detail-row"><span class="label">Paciente</span><span>{{ turno.paciente?.nombreCompleto }}</span></div>
-      <div class="detail-row"><span class="label">DNI</span><span>{{ turno.paciente?.dni }}</span></div>
-      <div class="detail-row"><span class="label">Médico</span><span>{{ turno.medico?.nombreCompleto }}</span></div>
-      <div class="detail-row"><span class="label">Especialidad</span><span>{{ turno.medico?.especialidad }}</span></div>
+      <div class="detail-row"><span class="label">Paciente</span><span>{{ turno.pacienteNombre }}</span></div>
+      <div class="detail-row"><span class="label">DNI</span><span>{{ turno.pacienteDNI }}</span></div>
+      <div class="detail-row"><span class="label">Médico</span><span>{{ turno.medicoNombre }}</span></div>
+      <div class="detail-row"><span class="label">Especialidad</span><span>{{ turno.especialidad }}</span></div>
       <div class="detail-row"><span class="label">Fecha y hora</span><span>{{ formatFecha(turno.fechaHora) }}</span></div>
       <div class="detail-row"><span class="label">Estado</span><span>{{ turno.estado }}</span></div>
       <div class="detail-row"><span class="label">Motivo</span><span>{{ turno.motivo }}</span></div>
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { turnosApi } from '../services/api'
+import { turnosApi } from '../services/turnosApi'
 
 export default {
   name: 'TurnoDetalle',
@@ -44,30 +44,43 @@ export default {
   },
   async mounted() {
     try {
-      const res = await turnosApi.getById(this.$route.params.id)
-      this.turno = res.data
-      this.nuevoEstado = this.turno.estado
-    } catch {
-      alert('Error al procesar la solicitud')
+      await this.cargarTurno(this.$route.params.id)
+    } catch (error) {
+      this.$error(error)
     }
   },
   methods: {
+    async cargarTurno(idTurno) {
+      const res = await turnosApi.getById(idTurno)
+      this.turno = res.data
+      this.nuevoEstado = this.turno.estado
+    },
     formatFecha(fecha) {
       return new Date(fecha).toLocaleString('es-AR')
     },
     async cambiarEstado() {
       try {
         const res = await turnosApi.actualizarEstado(this.turno.id, { estado: this.nuevoEstado })
-        this.turno = res.data
-      } catch {
-        alert('Error al procesar la solicitud')
+        await this.cargarTurno(this.$route.params.id)
+      } catch (error) {
+        this.$error(error)
       }
     },
     async cancelar() {
-      await turnosApi.cancelar(this.turno.id)
+      try {
+        await turnosApi.cancelar(this.turno.id)
+        await this.cargarTurno(this.$route.params.id)
+      } catch (error) {
+        this.$error(error)
+      }
     },
     async marcarAusencia() {
-      await turnosApi.marcarAusencia(this.turno.id)
+      try {
+        await turnosApi.marcarAusencia(this.turno.id)
+        await this.cargarTurno(this.$route.params.id)
+      } catch (error) {
+        this.$error(error)
+      }
     }
   }
 }

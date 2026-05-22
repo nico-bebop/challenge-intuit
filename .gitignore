@@ -1,14 +1,45 @@
+# =====================
 # .NET
-backend/bin/
-backend/obj/
-backend/*.db
-backend/*.db-shm
-backend/*.db-wal
+# =====================
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+/backend/TurnosMedicos.API/appsettings.json
 
-# Node
+# User secrets
+**/secrets.json
+
+# Databases
+*.db
+*.db-shm
+*.db-wal
+
+# Logs
+*.log
+
+# =====================
+# Node / Frontend
+# =====================
 frontend/node_modules/
 frontend/dist/
+frontend/build/
+frontend/.env
+frontend/.env.*
 
+# =====================
+# IDEs
+# =====================
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+**/.vs/
+
+# =====================
 # OS
+# =====================
 .DS_Store
 Thumbs.db

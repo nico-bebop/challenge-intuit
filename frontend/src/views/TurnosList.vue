@@ -17,17 +17,17 @@
       <tbody>
         <tr v-for="turno in turnos" :key="turno.id">
           <td>{{ turno.id }}</td>
-          <td>{{ turno.paciente?.nombreCompleto }}</td>
-          <td>{{ turno.medico?.nombreCompleto }}</td>
-          <td>{{ turno.medico?.especialidad }}</td>
+          <td>{{ turno.pacienteNombre }}</td>
+          <td>{{ turno.medicoNombre }}</td>
+          <td>{{ turno.especialidad }}</td>
           <td>{{ formatFecha(turno.fechaHora) }}</td>
           <td>
             <span :class="['badge', `badge-${turno.estado?.toLowerCase()}`]">{{ turno.estado }}</span>
           </td>
           <td>{{ turno.motivo }}</td>
-          <td>
-            <router-link :to="`/turnos/${turno.id}`">Ver</router-link>
-            <button class="btn-danger" style="margin-left: 8px" @click="cancelar(turno.id)">Cancelar</button>
+          <td style="display:flex; gap:8px">
+            <router-link :to="`/turnos/${turno.id}`" class="btn-primary">Ver</router-link>
+            <button class="btn-danger" @click="cancelar(turno.id)">Cancelar</button>
           </td>
         </tr>
       </tbody>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { turnosApi } from '../services/api'
+import { turnosApi } from '../services/turnosApi'
 
 export default {
   name: 'TurnosList',
@@ -48,18 +48,26 @@ export default {
   },
   async mounted() {
     try {
-      const res = await turnosApi.getAll()
-      this.turnos = res.data
-    } catch {
-      alert('Error al procesar la solicitud')
+      await this.cargarTurnos()
+    } catch (error) {
+      this.$error(error)
     }
   },
   methods: {
+    async cargarTurnos() {
+      const res = await turnosApi.getAll()
+      this.turnos = res.data
+    },
     formatFecha(fecha) {
       return new Date(fecha).toLocaleString('es-AR')
     },
     async cancelar(id) {
-      await turnosApi.cancelar(id)
+      try{
+        await turnosApi.cancelar(id)
+        await this.cargarTurnos()
+      } catch (error) {
+        this.$error(error)
+      }
     }
   }
 }

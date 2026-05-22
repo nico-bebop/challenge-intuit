@@ -4,7 +4,7 @@
     <form @submit.prevent="guardar">
       <div class="form-group">
         <label>Paciente</label>
-        <select v-model="form.pacienteId">
+        <select v-model="form.pacienteId" required >
           <option value="">Seleccioná un paciente</option>
           <option v-for="p in pacientes" :key="p.id" :value="p.id">
             {{ p.nombreCompleto }} — DNI {{ p.dni }}
@@ -13,20 +13,20 @@
       </div>
       <div class="form-group">
         <label>Médico</label>
-        <select v-model="form.medicoId">
+        <select v-model="form.medicoId" required >
           <option value="">Seleccioná un médico</option>
           <option v-for="m in medicos" :key="m.id" :value="m.id">
             {{ m.nombreCompleto }} — {{ m.especialidad }}
           </option>
         </select>
       </div>
-      <div class="form-group">
+      <div class="form-group" required >
         <label>Fecha y hora</label>
-        <input type="datetime-local" v-model="form.fechaHora" />
+        <input type="datetime-local" v-model="form.fechaHora" required />
       </div>
       <div class="form-group">
         <label>Motivo</label>
-        <input type="text" v-model="form.motivo" placeholder="Motivo de la consulta" />
+        <input type="text" v-model="form.motivo" placeholder="Motivo de la consulta" required maxlength="150"/>
       </div>
       <button type="submit">Confirmar turno</button>
     </form>
@@ -34,7 +34,9 @@
 </template>
 
 <script>
-import { turnosApi, pacientesApi, medicosApi } from '../services/api'
+import { turnosApi } from '../services/turnosApi'
+import { pacientesApi } from '../services/pacientesApi'
+import { medicosApi } from '../services/medicosApi'
 
 export default {
   name: 'TurnoNuevo',
@@ -55,9 +57,9 @@ export default {
       const [pRes, mRes] = await Promise.all([pacientesApi.getAll(), medicosApi.getAll()])
       this.pacientes = pRes.data
       this.medicos = mRes.data
-    } catch {
-      alert('Error al procesar la solicitud')
-    }
+      } catch (error) {
+        this.$error(error)
+      }
   },
   methods: {
     async guardar() {
@@ -69,8 +71,8 @@ export default {
           motivo: this.form.motivo
         })
         this.$router.push('/turnos')
-      } catch {
-        alert('Error al procesar la solicitud')
+      } catch (error) {
+        this.$error(error)
       }
     }
   }
